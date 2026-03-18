@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stewart — AI Cannabis Operator</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0a0a0a;
+      color: #fff;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* ── Header ── */
+    .header {
+      position: absolute;
+      top: 28px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-leaf { width: 32px; height: 32px; }
+    .logo-text { font-size: 18px; font-weight: 700; letter-spacing: 2px; color: #4caf50; }
+    .logo-sub  { font-size: 10px; letter-spacing: 1px; color: #888; }
+
+    /* ── Avatar Ring ── */
+    .avatar-wrapper {
+      position: relative;
+      width: 320px; height: 320px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .ring {
+      position: absolute; border-radius: 50%; border: 2px solid;
+      animation: ring-pulse 2s ease-in-out infinite;
+    }
+    .ring-1 { width: 320px; height: 320px; border-color: rgba(76,175,80,0.6); animation-delay: 0s; }
+    .ring-2 { width: 290px; height: 290px; border-color: rgba(76,175,80,0.4); animation-delay: 0.3s; }
+    .ring-3 { width: 260px; height: 260px; border-color: rgba(76,175,80,0.2); animation-delay: 0.6s; }
+
+    @keyframes ring-pulse {
+      0%, 100% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.04); opacity: 1; }
+    }
+    .ring.active { animation: ring-pulse-active 0.6s ease-in-out infinite; }
+    @keyframes ring-pulse-active {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.08); opacity: 0.7; }
+    }
+
+    .avatar-circle {
+      width: 240px; height: 240px;
+      border-radius: 50%; overflow: hidden;
+      border: 3px solid rgba(76,175,80,0.5);
+      position: relative; z-index: 10;
+    }
+    .avatar-circle img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center top;
+    }
+
+    /* ── Status ── */
+    .status {
+      margin-top: 24px; font-size: 13px; font-weight: 600;
+      letter-spacing: 3px; color: #4caf50; text-transform: uppercase;
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .status.visible { opacity: 1; }
+
+    /* ── Caption ── */
+    .caption {
+      margin-top: 16px; max-width: 480px; text-align: center;
+      font-size: 14px; color: #aaa; line-height: 1.6;
+      padding: 0 24px; min-height: 40px;
+    }
+
+    /* ── Controls ── */
+    .controls { display: flex; gap: 16px; margin-top: 32px; align-items: center; }
+    .btn {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 50%; width: 48px; height: 48px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .btn:hover { background: rgba(255,255,255,0.15); }
+    .btn svg { width: 20px; height: 20px; fill: #ccc; }
+    .btn-speak {
+      width: 64px; height: 64px;
+      background: rgba(76,175,80,0.15);
+      border-color: rgba(76,175,80,0.5);
+    }
+    .btn-speak:hover { background: rgba(76,175,80,0.3); }
+    .btn-speak svg { fill: #4caf50; width: 26px; height: 26px; }
+    .btn-speak.loading { opacity: 0.6; cursor: not-allowed; }
+
+    /* ── Subtitle ── */
+    .subtitle { position: absolute; bottom: 32px; font-size: 11px; color: #555; letter-spacing: 1px; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <svg class="logo-leaf" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 2C20 2 4 10 4 22C4 30.8 11.2 38 20 38C28.8 38 36 30.8 36 22C36 10 20 2 20 2Z" fill="#4caf50" opacity="0.9"/>
+      <path d="M20 38V18" stroke="#0a0a0a" stroke-width="2" stroke-linecap="round"/>
+      <path d="M20 26L14 20" stroke="#0a0a0a" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M20 22L26 16" stroke="#0a0a0a" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    <div>
+      <div class="logo-text">CANNISTEW</div>
+      <div class="logo-sub">AI CANNABIS OPERATOR</div>
+    </div>
+  </div>
+
+  <!-- Avatar -->
+  <div class="avatar-wrapper" id="avatarWrapper">
+    <div class="ring ring-1" id="ring1"></div>
+    <div class="ring ring-2" id="ring2"></div>
+    <div class="ring ring-3" id="ring3"></div>
+    <div class="avatar-circle">
+      <img id="avatarImg"
+           src="https://raw.githubusercontent.com/Meetstewart/cannistew/main/assets/stewart-avatar-v2.png"
+           alt="Stewart Avatar"
+           onerror="this.style.display='none'; document.getElementById('avatarFallback').style.display='flex'" />
+      <div id="avatarFallback" style="display:none; width:100%; height:100%; background:linear-gradient(135deg,#1a3a1a,#0d1f0d); align-items:center; justify-content:center;">
+        <svg viewBox="0 0 100 100" width="80" fill="#4caf50">
+          <circle cx="50" cy="35" r="20" opacity="0.8"/>
+          <ellipse cx="50" cy="80" rx="30" ry="20" opacity="0.6"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Status -->
+  <div class="status" id="statusText">SPEAKING</div>
+
+  <!-- Caption -->
+  <div class="caption" id="caption">
+    Hey, I'm Stewart. Your AI operator for the cannabis industry.
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <div class="btn" id="muteBtn" title="Mute">
+      <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+    </div>
+    <div class="btn btn-speak" id="speakBtn" title="Hear Stewart">
+      <svg viewBox="0 0 24 24"><path d="M12 15c1.66 0 2.99-1.34 2.99-3L15 6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 15 6.7 12H5c0 3.41 2.72 6.23 6 6.72V21h2v-2.28c3.28-.48 6-3.3 6-6.72h-1.7z"/></svg>
+    </div>
+    <div class="btn" title="Info" id="infoBtn">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="subtitle">Powered by Stewart AI · cannistew.com</div>
+
+  <script>
+    const ELEVENLABS_API_KEY = 'sk_69ca5f0d54a48ca9353f954bd648d474b4ed7238de9ef7bf';
+    const VOICE_ID = 'iP95p4xoKVk53GoZ742B'; // Chris
+
+    const GREETINGS = [
+      "Hey, I'm Stewart — your AI cannabis operator. Whether you're shopping, learning, or growing, I'm here to guide you. What can I help you with today?",
+      "Welcome! I'm Stewart, the AI that knows cannabis inside and out. Strains, compliance, cultivation — ask me anything.",
+      "Stewart here. Your go-to AI for everything cannabis. Ready when you are.",
+    ];
+
+    const statusEl  = document.getElementById('statusText');
+    const captionEl = document.getElementById('caption');
+    const speakBtn  = document.getElementById('speakBtn');
+    const rings     = [document.getElementById('ring1'), document.getElementById('ring2'), document.getElementById('ring3')];
+
+    let isSpeaking     = false;
+    let greetingIndex  = 0;
+    let muted          = false;
+    let currentAudio   = null;
+
+    function setSpeaking(active) {
+      isSpeaking = active;
+      if (active) {
+        statusEl.classList.add('visible');
+        rings.forEach(r => r.classList.add('active'));
+        speakBtn.classList.add('loading');
+      } else {
+        statusEl.classList.remove('visible');
+        rings.forEach(r => r.classList.remove('active'));
+        speakBtn.classList.reove('loading');
+      }
+    }
+
+    async function triggerGreeting() {
+      if (isSpeaking) return;
+      setSpeaking(true);
+
+      const text = GREETINGS[greetingIndex % GREETINGS.length];
+      greetingIndex++;
+      captionEl.textContent = text;
+
+      try {
+        const response = await fetch(
+          `https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}`,
+          {
+            method: 'POST',
+            headers: {
+              'xi-api-key': ELEVENLABS_API_KEY,
+              'Content-Type': 'application/json',
+              'Accept': 'audio/mpeg',
+            },
+            body: JSON.stringify({
+              text,
+              model_id: 'eleven_monolingual_v1',
+              voice_settings: { stability: 0.5, similarity_boost: 0.75 },
+            }),
+          }
+        );
+
+        if (!response.ok) {
+          const errText = await response.text();
+          console.error('ElevenLabs error:', response.status, errText);
+          setSpeaking(false);
+          captionEl.textContent = text;
+          return;
+        }
+
+        const arrayBuffer = await response.arrayBuffer();
+        const blob = new Blob([arrayBuffer], { type: 'audio/mpeg' });
+        const url  = URL.createObjectURL(blob);
+
+        currentAudio = new Audio(url);
+        currentAudio.muted = muted;
+        currentAudio.onended = () => {
+          setSpeaking(false);
+          URL.revokeObjectURL(url);
+        };
+        currentAudio.onerror = () => {
+          setSpeaking(false);
+          URL.revokeObjectURL(url);
+        };
+        await currentAudio.play();
+
+      } catch (e) {
+        console.error('TTS error:', e);
+        setSpeaking(false);
+      }
+    }
+
+    // Mute toggle
+    document.getElementById('muteBtn').addEventListener('click', () => {
+      muted = !muted;
+      if (currentAudio) currentAudio.muted = muted;
+      document.getElementById('muteBtn').style.opacity = muted ? '0.4' : '1';
+    });
+
+    speakBtn.addEventListener('click', triggerGreeting);
+
+    // Auto-greet after 2 seconds
+    setTimeout(triggerGreeting, 2000);
+  </script>
+
+</body>
+</html>
