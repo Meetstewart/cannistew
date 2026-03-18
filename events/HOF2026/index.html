@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CanniStew @ Hall of Flowers 2026</title>
+  <meta name="description" content="You found us at Hall of Flowers 2026. Claim your early access to CanniStew — AI built for cannabis operators." />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #000;
+      color: #f0f0f0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .page {
+      flex: 1;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 48px 24px 40px;
+      width: 100%;
+    }
+    .logo {
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #22c55e;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+    .event-tag {
+      text-align: center;
+      font-size: 0.75rem;
+      color: #555;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 48px;
+    }
+    .hero-block {
+      background: #0d1a0f;
+      border: 1px solid #1a3a1f;
+      border-radius: 16px;
+      padding: 36px 28px;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .eyebrow {
+      display: inline-block;
+      background: rgba(34,197,94,0.12);
+      border: 1px solid rgba(34,197,94,0.3);
+      color: #22c55e;
+      padding: 5px 14px;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    h1 {
+      font-size: clamp(1.8rem, 7vw, 2.6rem);
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.5px;
+      margin-bottom: 20px;
+    }
+    h1 span { color: #22c55e; }
+    .hero-desc {
+      font-size: 0.95rem;
+      color: #888;
+      line-height: 1.65;
+      margin-bottom: 32px;
+    }
+    .hero-desc strong { color: #ddd; }
+    .btn-cta {
+      display: block;
+      background: #22c55e;
+      color: #000;
+      padding: 18px;
+      border-radius: 10px;
+      font-weight: 800;
+      font-size: 1rem;
+      text-decoration: none;
+      text-align: center;
+      transition: background 0.2s, transform 0.1s;
+      letter-spacing: 0.2px;
+    }
+    .btn-cta:hover { background: #16a34a; transform: translateY(-1px); }
+    .btn-cta:active { transform: translateY(0); }
+    .sub-cta {
+      font-size: 0.75rem;
+      color: #444;
+      text-align: center;
+      margin-top: 12px;
+    }
+
+    /* Lead Capture Form */
+    .form-block {
+      background: #0f0f0f;
+      border: 1px solid #222;
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+    .form-block h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .form-block p {
+      font-size: 0.82rem;
+      color: #666;
+      margin-bottom: 20px;
+    }
+    .form-row { display: flex; flex-direction: column; gap: 12px; }
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"] {
+      width: 100%;
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      padding: 13px 14px;
+      color: #f0f0f0;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+      -webkit-appearance: none;
+    }
+    input:focus { border-color: #22c55e; }
+    input::placeholder { color: #555; }
+    .consent-text {
+      font-size: 0.72rem;
+      color: #444;
+      line-height: 1.5;
+      margin-top: 4px;
+    }
+    .btn-submit {
+      width: 100%;
+      background: #22c55e;
+      color: #000;
+      padding: 15px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      border: none;
+      cursor: pointer;
+      margin-top: 4px;
+      transition: background 0.2s;
+    }
+    .btn-submit:hover { background: #16a34a; }
+    .success-msg {
+      display: none;
+      text-align: center;
+      padding: 20px;
+      background: rgba(34,197,94,0.08);
+      border: 1px solid rgba(34,197,94,0.25);
+      border-radius: 10px;
+      color: #22c55e;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    /* How it works */
+    .steps-block {
+      background: #0f0f0f;
+      border: 1px solid #1e1e1e;
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+    .steps-block h2 { font-size: 0.95rem; color: #666; font-weight: 600; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
+    .step { display: flex; gap: 16px; margin-bottom: 20px; align-items: flex-start; }
+    .step:last-child { margin-bottom: 0; }
+    .step-num {
+      background: rgba(34,197,94,0.15);
+      color: #22c55e;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.8rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .step-text h3 { font-size: 0.9rem; font-weight: 700; margin-bottom: 4px; }
+    .step-text p { font-size: 0.82rem; color: #666; line-height: 1.5; }
+
+    footer {
+      border-top: 1px solid #111;
+      padding: 24px;
+      text-align: center;
+      font-size: 0.75rem;
+      color: #444;
+    }
+    footer a { color: #444; text-decoration: none; margin: 0 8px; }
+    footer a:hover { color: #888; }
+    .compliance { font-size: 0.7rem; color: #333; margin-top: 8px; max-width: 400px; margin-left: auto; margin-right: auto; }
+  </style>
+</head>
+<body>
+
+  <div class="page">
+    <div class="logo">🌿 CanniStew</div>
+    <div class="event-tag">Hall of Flowers 2026</div>
+
+    <!-- Hero -->
+    <div class="hero-block">
+      <div class="eyebrow">🔒 Private Beta</div>
+      <h1>AI built for<br><span>cannabis</span></h1>
+      <p class="hero-desc">
+        Stewart is your always-on AI operator for cannabis businesses.
+        <br><br>
+        Early partners who join now lock in <strong>special lifetime pricing</strong> — for as long as they use the platform.
+        <br><br>
+        This offer is only available during the show.
+      </p>
+      <a href="https://meetstewart.com/signup.html" class="btn-cta">Claim Beta Access</a>
+      <p class="sub-cta">No credit card required · Takes 2 minutes</p>
+    </div>
+
+    <!-- Lead Capture -->
+    <div class="form-block">
+      <h2>Stay in the loop</h2>
+      <p>Drop your info and we'll follow up with early access details.</p>
+      <form id="leadForm">
+        <div class="form-row">
+          <input type="text" name="name" placeholder="Your name" required />
+          <input type="text" name="company" placeholder="Dispensary / company name" />
+          <input type="tel" name="phone" placeholder="Phone number" />
+          <input type="email" name="email" placeholder="Email address" />
+        </div>
+        <p class="consent-text" style="margin-top: 12px;">
+          By submitting, you agree to receive messages about CanniStew from MeetStewart, Inc.
+          Message frequency varies. Reply STOP to opt out. Msg &amp; data rates may apply.
+          See <a href="/privacy.html" style="color:#555;">Privacy Policy</a> and <a href="/terms.html" style="color:#555;">Terms</a>.
+        </p>
+        <button type="submit" class="btn-submit">Send me info</button>
+      </form>
+      <div class="success-msg" id="successMsg">
+        ✅ Got it! We'll reach out soon.
+      </div>
+    </div>
+
+    <!-- How it works -->
+    <div class="steps-block">
+      <h2>How it works</h2>
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text">
+          <h3>Sign up</h3>
+          <p>Create your free beta account in 2 minutes.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text">
+          <h3>Connect your business</h3>
+          <p>Tell Stewart about your operation — products, team, hours, common questions.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text">
+          <h3>Stewart goes to work</h3>
+          <p>Handle calls, messages, and customer needs — automatically, 24/7.</p>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end .page -->
+
+  <footer>
+    <div>
+      <a href="/privacy.html">Privacy Policy</a>
+      <a href="/terms.html">Terms of Use</a>
+      <a href="https://meetstewart.com/company/contact/">Contact</a>
+    </div>
+    <div>© 2026 MeetStewart, Inc.</div>
+    <div class="compliance">
+      We do not sell or share mobile or personal data with third parties for marketing or promotional purposes.
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('leadForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const form = e.target;
+      const data = new FormData(form);
+      // TODO: wire to form endpoint (Formspree or Google Sheet)
+      form.style.display = 'none';
+      document.getElementById('successMsg').style.display = 'block';
+    });
+  </script>
+
+</body>
+</html>
