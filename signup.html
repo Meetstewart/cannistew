@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up — CanniStew AI</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0a0a0a; color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+      min-height: 100vh; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; padding: 40px 20px;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; margin-bottom: 32px; }
+    .logo-text { font-size: 22px; font-weight: 700; letter-spacing: 2px; color: #4caf50; }
+    .logo-sub  { font-size: 11px; letter-spacing: 1px; color: #555; }
+    h1 { font-size: 26px; font-weight: 700; margin-bottom: 8px; text-align: center; }
+    .sub { font-size: 14px; color: #888; margin-bottom: 36px; text-align: center; max-width: 340px; line-height: 1.6; }
+    form { width: 100%; max-width: 380px; display: flex; flex-direction: column; gap: 14px; }
+    input, select {
+      background: #111; border: 1px solid #2a2a2a; border-radius: 10px;
+      padding: 14px 16px; font-size: 15px; color: #fff; outline: none;
+      transition: border-color 0.2s; width: 100%;
+    }
+    input::placeholder { color: #444; }
+    input:focus, select:focus { border-color: rgba(76,175,80,0.6); }
+    select { color: #888; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23666' d='M6 8L0 0h12z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; padding-right: 40px; }
+    select option { background: #111; color: #fff; }
+    button[type=submit] {
+      background: #4caf50; border: none; border-radius: 10px;
+      padding: 16px; font-size: 15px; font-weight: 700;
+      color: #fff; cursor: pointer; letter-spacing: 1px;
+      transition: background 0.2s; margin-top: 4px;
+    }
+    button[type=submit]:hover { background: #43a047; }
+    button[type=submit]:active { transform: scale(0.98); }
+    .privacy { font-size: 11px; color: #333; text-align: center; margin-top: 12px; }
+    .privacy a { color: #4caf50; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="logo">
+    <svg width="30" height="30" viewBox="0 0 40 40" fill="none">
+      <path d="M20 2C20 2 4 10 4 22C4 30.8 11.2 38 20 38C28.8 38 36 30.8 36 22C36 10 20 2 20 2Z" fill="#4caf50" opacity="0.9"/>
+      <path d="M20 38V18" stroke="#0a0a0a" stroke-width="2" stroke-linecap="round"/>
+      <path d="M20 26L14 20" stroke="#0a0a0a" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M20 22L26 16" stroke="#0a0a0a" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    <div>
+      <div class="logo-text">CANNISTEW</div>
+      <div class="logo-sub">AI CANNABIS OPERATOR</div>
+    </div>
+  </div>
+
+  <h1>Get Early Access</h1>
+  <p class="sub">Be first to automate your cannabis operation with Stewart AI. No spam, just updates.</p>
+
+  <form action="https://formsubmit.co/nickmc123@gmail.com" method="POST">
+    <input type="hidden" name="_subject" value="CanniStew Signup" />
+    <input type="hidden" name="_next" value="https://cannistew.com/thanks.html" />
+    <input type="hidden" name="_captcha" value="false" />
+
+    <input type="text"  name="name"    placeholder="Your name"         required />
+    <input type="email" name="email"   placeholder="Email address"     required />
+    <input type="tel"   name="phone"   placeholder="Phone (optional)" />
+    <select name="role" required>
+      <option value="" disabled selected>What best describes you?</option>
+      <option value="Grower / Cultivator">Grower / Cultivator</option>
+      <option value="Dispensary Owner">Dispensary Owner</option>
+      <option value="Dispensary Manager">Dispensary Manager</option>
+      <option value="Multi-State Operator">Multi-State Operator</option>
+      <option value="Investor">Investor</option>
+      <option value="Other">Other</option>
+    </select>
+    <input type="text" name="company" placeholder="Company name (optional)" />
+
+    <button type="submit">REQUEST EARLY ACCESS →</button>
+  </form>
+  <p class="privacy">Your info is safe. <a href="/">Back to home</a></p>
+</body>
+</html>
