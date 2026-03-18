@@ -1,358 +1,492 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CanniStew.com — AI for Cannabis</title>
-  <meta name="description" content="Cannabis Industry AI. Voice, Text, Chat — Any Time. Powered by Stewart AI." />
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CanniStew — Cannabis AI</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800&display=swap');
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #050e05;
-      color: #f0f0f0;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
+  body {
+    background: #0a0f0a;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
 
-    /* ── HEADER ── */
-    header {
-      text-align: center;
-      padding: 56px 24px 0;
-      position: relative;
-      z-index: 2;
-    }
+  /* Subtle green radial glow behind hero */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 900px; height: 600px;
+    background: radial-gradient(ellipse, rgba(34,197,94,0.13) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
 
-    .site-title {
-      font-size: clamp(3rem, 10vw, 7rem);
-      font-weight: 900;
-      letter-spacing: -3px;
-      color: #fff;
-      line-height: 1;
-    }
+  /* ---- HEADER ---- */
+  header {
+    position: relative; z-index: 10;
+    text-align: center;
+    padding: 48px 20px 0;
+  }
+  header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3.5rem, 10vw, 8rem);
+    letter-spacing: 0.06em;
+    color: #fff;
+    line-height: 1;
+  }
+  header h1 span { color: #22c55e; }
+  header .tagline {
+    font-size: clamp(1.1rem, 3vw, 1.7rem);
+    font-weight: 600;
+    color: #a3e635;
+    margin-top: 10px;
+    letter-spacing: 0.04em;
+  }
+  header .sub {
+    font-size: clamp(0.9rem, 2vw, 1.15rem);
+    color: #86efac;
+    margin-top: 6px;
+    opacity: 0.85;
+  }
 
-    .site-title span {
-      color: #22c55e;
-    }
+  /* ---- HERO STAGE ---- */
+  .hero {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 0px;
+    padding: 30px 20px 0;
+    min-height: 480px;
+  }
 
-    .divider {
-      color: #22c55e;
-      font-weight: 900;
-      font-size: clamp(2rem, 6vw, 4rem);
-      letter-spacing: 4px;
-      display: block;
-      margin: 8px 0 4px;
-    }
+  /* floating nug */
+  .nug {
+    position: absolute;
+    animation: floatNug 4s ease-in-out infinite;
+    opacity: 0.92;
+  }
+  @keyframes floatNug {
+    0%,100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-14px) rotate(8deg); }
+  }
 
-    .tagline-1 {
-      font-size: clamp(1.1rem, 3.5vw, 2rem);
-      font-weight: 700;
-      color: #e0e0e0;
-      margin-top: 20px;
-      letter-spacing: -0.5px;
-    }
+  /* ---- STEWART SVG ---- */
+  .stewart-wrap {
+    position: relative;
+    flex-shrink: 0;
+    width: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
-    .tagline-2 {
-      font-size: clamp(0.95rem, 2.5vw, 1.3rem);
-      font-weight: 500;
-      color: #6ee7a0;
-      margin-top: 10px;
-      letter-spacing: 0.5px;
-    }
+  /* ---- GIRL SVG ---- */
+  .girl-wrap {
+    position: relative;
+    flex-shrink: 0;
+    width: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 0;
+    align-self: flex-end;
+  }
 
-    /* ── HERO SECTION ── */
-    .hero {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0;
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 40px 24px 0;
-      position: relative;
-    }
+  /* ---- CTA CARD ---- */
+  .cta-card {
+    position: relative;
+    z-index: 10;
+    background: rgba(20,40,20,0.85);
+    border: 2px solid #22c55e;
+    border-radius: 20px;
+    padding: 32px 36px;
+    text-align: center;
+    max-width: 340px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 0 40px rgba(34,197,94,0.18);
+    align-self: center;
+    margin: 0 10px;
+  }
+  .cta-card .big-msg {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.2rem;
+    color: #a3e635;
+    line-height: 1.1;
+    margin-bottom: 10px;
+  }
+  .cta-card .cta-sub {
+    font-size: 0.95rem;
+    color: #86efac;
+    margin-bottom: 22px;
+    line-height: 1.5;
+  }
+  .cta-btn {
+    display: inline-block;
+    background: linear-gradient(135deg, #16a34a, #22c55e);
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 800;
+    padding: 14px 28px;
+    border-radius: 50px;
+    text-decoration: none;
+    box-shadow: 0 0 20px rgba(34,197,94,0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+    letter-spacing: 0.04em;
+  }
+  .cta-btn:hover {
+    transform: scale(1.06);
+    box-shadow: 0 0 32px rgba(34,197,94,0.65);
+  }
 
-    .hero-left {
-      flex: 0 0 auto;
-      position: relative;
-    }
+  /* ---- BOTTOM BAND ---- */
+  .bottom-band {
+    position: relative; z-index: 5;
+    text-align: center;
+    padding: 40px 20px 20px;
+  }
+  .big-central {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(1.8rem, 5vw, 3.2rem);
+    color: #22c55e;
+    letter-spacing: 0.08em;
+    line-height: 1.2;
+  }
+  .big-central span { color: #fff; }
+  .powered {
+    font-size: 0.85rem;
+    color: #4ade80;
+    margin-top: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
 
-    .avatar-wrap {
-      position: relative;
-      width: clamp(260px, 35vw, 460px);
-    }
-
-    .avatar-wrap img {
-      width: 100%;
-      display: block;
-      filter: drop-shadow(0 0 40px rgba(34,197,94,0.35));
-    }
-
-    .hero-right {
-      flex: 1;
-      padding-left: clamp(16px, 3vw, 60px);
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 24px;
-    }
-
-    .cta-card {
-      background: linear-gradient(135deg, #0d2b0f 0%, #0a1a0c 100%);
-      border: 2px solid #22c55e;
-      border-radius: 20px;
-      padding: 36px 32px;
-      width: 100%;
-      max-width: 480px;
-      box-shadow: 0 0 60px rgba(34,197,94,0.15), inset 0 1px 0 rgba(34,197,94,0.1);
-    }
-
-    .cta-label {
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 2px;
-      color: #22c55e;
-      text-transform: uppercase;
-      margin-bottom: 12px;
-    }
-
-    .cta-headline {
-      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
-      font-weight: 900;
-      line-height: 1.15;
-      letter-spacing: -1px;
-      color: #fff;
-      margin-bottom: 24px;
-    }
-
-    .cta-headline em {
-      color: #22c55e;
-      font-style: normal;
-    }
-
-    .btn-try {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      background: #22c55e;
-      color: #000;
-      font-size: 1.15rem;
-      font-weight: 800;
-      padding: 18px 36px;
-      border-radius: 12px;
-      text-decoration: none;
-      letter-spacing: -0.3px;
-      transition: transform 0.15s, background 0.15s, box-shadow 0.15s;
-      box-shadow: 0 4px 24px rgba(34,197,94,0.4);
-      width: 100%;
-      justify-content: center;
-    }
-
-    .btn-try:hover {
-      background: #16a34a;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 32px rgba(34,197,94,0.5);
-    }
-
-    .btn-try .arrow {
-      font-size: 1.4rem;
-      transition: transform 0.15s;
-    }
-
-    .btn-try:hover .arrow {
-      transform: translateX(4px);
-    }
-
-    /* ── CENTRAL MESSAGE ── */
-    .central {
-      text-align: center;
-      padding: 70px 24px 20px;
-      position: relative;
-    }
-
-    .central::before {
-      content: '';
-      display: block;
-      width: 60px;
-      height: 3px;
-      background: #22c55e;
-      margin: 0 auto 32px;
-      border-radius: 2px;
-    }
-
-    .central-headline {
-      font-size: clamp(1.8rem, 5vw, 3.5rem);
-      font-weight: 900;
-      letter-spacing: -1.5px;
-      line-height: 1.1;
-      color: #fff;
-      margin-bottom: 20px;
-    }
-
-    .central-headline .green { color: #22c55e; }
-
-    .central-sub {
-      font-size: clamp(1.1rem, 2.5vw, 1.6rem);
-      font-weight: 600;
-      color: #aaa;
-      letter-spacing: 1px;
-      margin-bottom: 16px;
-    }
-
-    .central-sub strong {
-      color: #6ee7a0;
-      font-weight: 700;
-    }
-
-    .powered {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: #444;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      margin-top: 8px;
-    }
-
-    .powered span { color: #22c55e; }
-
-    /* ── PILLS ── */
-    .pills {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      justify-content: center;
-      padding: 0 24px 60px;
-    }
-
-    .pill {
-      background: #0d1f0e;
-      border: 1px solid #1e4a22;
-      color: #6ee7a0;
-      padding: 10px 22px;
-      border-radius: 100px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      letter-spacing: 0.3px;
-    }
-
-    /* ── GLOW BG ── */
-    .glow {
-      position: fixed;
-      width: 600px;
-      height: 600px;
-      background: radial-gradient(circle, rgba(34,197,94,0.07) 0%, transparent 70%);
-      top: -200px;
-      left: 50%;
-      transform: translateX(-50%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    /* ── FOOTER ── */
-    footer {
-      border-top: 1px solid #111;
-      padding: 28px 24px;
-      text-align: center;
-      font-size: 0.8rem;
-      color: #333;
-    }
-
-    footer a { color: #333; text-decoration: none; margin: 0 12px; }
-    footer a:hover { color: #888; }
-
-    /* ── MOBILE ── */
-    @media (max-width: 700px) {
-      .hero {
-        flex-direction: column;
-        align-items: center;
-        padding-top: 24px;
-      }
-      .avatar-wrap {
-        width: clamp(180px, 60vw, 300px);
-        margin-bottom: -20px;
-      }
-      .hero-right {
-        padding-left: 0;
-        align-items: center;
-        width: 100%;
-      }
-      .cta-card {
-        max-width: 100%;
-      }
-    }
-  </style>
+  /* pills */
+  .pills {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    padding: 24px 20px 40px;
+    position: relative; z-index: 5;
+  }
+  .pill {
+    background: rgba(34,197,94,0.12);
+    border: 1px solid rgba(34,197,94,0.35);
+    color: #86efac;
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 6px 18px;
+    border-radius: 50px;
+    letter-spacing: 0.06em;
+  }
+</style>
 </head>
 <body>
 
-  <div class="glow"></div>
+<!-- HEADER -->
+<header>
+  <h1>CANNI<span>STEW</span>.COM</h1>
+  <div class="tagline">AI for Weed Shops &amp; Weed Growers</div>
+  <div class="sub">Finance · Inventory · Legal · Socials · and more</div>
+</header>
 
-  <!-- HEADER -->
-  <header>
-    <div class="site-title"><span>Canni</span>Stew.com</div>
-    <span class="divider">///</span>
-    <div class="tagline-1">AI for Weed Shops &amp; Weed Growers</div>
-    <div class="tagline-2">Finance &nbsp;·&nbsp; Inventory &nbsp;·&nbsp; Legal &nbsp;·&nbsp; Socials &nbsp;·&nbsp; and more</div>
-  </header>
+<!-- HERO STAGE -->
+<div class="hero">
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-left">
-      <div class="avatar-wrap">
-        <img
-          src="https://raw.githubusercontent.com/Meetstewart/cannistew/main/assets/stewart-avatar-v2.png"
-          alt="Stewart AI"
-          onerror="this.style.opacity='0'"
-        />
-      </div>
-    </div>
+  <!-- FLOATING NUGS (scattered) -->
 
-    <div class="hero-right">
-      <div class="cta-card">
-        <div class="cta-label">👋 Try it now — it's free</div>
-        <div class="cta-headline">
-          Meet <em>Stewart</em> —<br>Your Cannabis AI
-        </div>
-        <a href="/nina/" class="btn-try">
-          Click to Try It Out with Stew
-          <span class="arrow">→</span>
-        </a>
-      </div>
-    </div>
-  </section>
+  <!-- Nug top-left -->
+  <svg class="nug" style="left:4%;top:10%;animation-delay:0s;" width="70" height="80" viewBox="0 0 70 80">
+    <ellipse cx="35" cy="45" rx="22" ry="28" fill="#2d6a1a"/>
+    <ellipse cx="22" cy="30" rx="14" ry="18" fill="#3a8a22"/>
+    <ellipse cx="48" cy="28" rx="13" ry="17" fill="#3a8a22"/>
+    <ellipse cx="35" cy="18" rx="12" ry="15" fill="#4caf30"/>
+    <ellipse cx="25" cy="42" rx="8" ry="10" fill="#228b1a" opacity="0.6"/>
+    <ellipse cx="48" cy="50" rx="7" ry="9" fill="#228b1a" opacity="0.5"/>
+    <!-- orange hairs -->
+    <line x1="30" y1="20" x2="26" y2="10" stroke="#f97316" stroke-width="1.5"/>
+    <line x1="40" y1="18" x2="44" y2="8" stroke="#f97316" stroke-width="1.5"/>
+    <line x1="22" y1="30" x2="16" y2="22" stroke="#f97316" stroke-width="1.2"/>
+    <!-- trichomes -->
+    <circle cx="35" cy="25" r="2.5" fill="#d1fae5" opacity="0.8"/>
+    <circle cx="28" cy="35" r="2" fill="#d1fae5" opacity="0.7"/>
+    <circle cx="44" cy="38" r="2" fill="#d1fae5" opacity="0.7"/>
+    <circle cx="40" cy="52" r="1.8" fill="#d1fae5" opacity="0.6"/>
+  </svg>
 
-  <!-- CENTRAL MESSAGE -->
-  <div class="central">
-    <div class="central-headline">
-      <span class="green">Cannabis Industry</span><br>Focused AI
-    </div>
-    <div class="central-sub">
-      <strong>Voice &nbsp;·&nbsp; Text &nbsp;·&nbsp; Chat</strong> &nbsp; Any Time
-    </div>
-    <div class="powered">Powered by <span>Stewart AI</span></div>
+  <!-- Nug top-right -->
+  <svg class="nug" style="right:4%;top:8%;animation-delay:1s;" width="65" height="75" viewBox="0 0 65 75">
+    <ellipse cx="32" cy="42" rx="20" ry="26" fill="#2d6a1a"/>
+    <ellipse cx="20" cy="28" rx="13" ry="17" fill="#3a8a22"/>
+    <ellipse cx="45" cy="25" rx="12" ry="16" fill="#3a8a22"/>
+    <ellipse cx="32" cy="15" rx="11" ry="14" fill="#4caf30"/>
+    <line x1="28" y1="17" x2="24" y2="7" stroke="#f97316" stroke-width="1.5"/>
+    <line x1="37" y1="15" x2="41" y2="6" stroke="#f97316" stroke-width="1.5"/>
+    <circle cx="32" cy="22" r="2.2" fill="#d1fae5" opacity="0.8"/>
+    <circle cx="25" cy="32" r="1.8" fill="#d1fae5" opacity="0.7"/>
+    <circle cx="42" cy="36" r="1.8" fill="#d1fae5" opacity="0.7"/>
+  </svg>
+
+  <!-- Nug lower-left -->
+  <svg class="nug" style="left:8%;bottom:60px;animation-delay:2s;" width="55" height="65" viewBox="0 0 55 65">
+    <ellipse cx="27" cy="38" rx="18" ry="22" fill="#2d6a1a"/>
+    <ellipse cx="18" cy="24" rx="11" ry="15" fill="#3a8a22"/>
+    <ellipse cx="38" cy="22" rx="10" ry="14" fill="#4caf30"/>
+    <line x1="24" y1="14" x2="20" y2="6" stroke="#f97316" stroke-width="1.5"/>
+    <circle cx="27" cy="20" r="2" fill="#d1fae5" opacity="0.8"/>
+    <circle cx="36" cy="32" r="1.6" fill="#d1fae5" opacity="0.7"/>
+  </svg>
+
+  <!-- Nug lower-right -->
+  <svg class="nug" style="right:7%;bottom:55px;animation-delay:1.5s;" width="60" height="70" viewBox="0 0 60 70">
+    <ellipse cx="30" cy="40" rx="19" ry="24" fill="#2d6a1a"/>
+    <ellipse cx="19" cy="26" rx="12" ry="16" fill="#3a8a22"/>
+    <ellipse cx="42" cy="24" rx="11" ry="15" fill="#4caf30"/>
+    <ellipse cx="30" cy="14" rx="10" ry="13" fill="#4caf30"/>
+    <line x1="26" y1="16" x2="22" y2="7" stroke="#f97316" stroke-width="1.5"/>
+    <line x1="35" y1="13" x2="39" y2="5" stroke="#f97316" stroke-width="1.5"/>
+    <circle cx="30" cy="20" r="2" fill="#d1fae5" opacity="0.8"/>
+    <circle cx="22" cy="34" r="1.8" fill="#d1fae5" opacity="0.7"/>
+    <circle cx="42" cy="38" r="1.8" fill="#d1fae5" opacity="0.7"/>
+  </svg>
+
+  <!-- Nug far-right mid -->
+  <svg class="nug" style="right:1%;top:38%;animation-delay:0.7s;" width="50" height="60" viewBox="0 0 50 60">
+    <ellipse cx="25" cy="35" rx="16" ry="20" fill="#2d6a1a"/>
+    <ellipse cx="16" cy="22" rx="10" ry="14" fill="#3a8a22"/>
+    <ellipse cx="35" cy="20" rx="9" ry="13" fill="#4caf30"/>
+    <line x1="22" y1="12" x2="18" y2="5" stroke="#f97316" stroke-width="1.2"/>
+    <circle cx="25" cy="17" r="1.8" fill="#d1fae5" opacity="0.8"/>
+  </svg>
+
+  <!-- ===== GIRL SVG ===== -->
+  <div class="girl-wrap">
+    <svg width="180" height="380" viewBox="0 0 180 380" xmlns="http://www.w3.org/2000/svg">
+      <!-- Long dark hair back layer -->
+      <ellipse cx="90" cy="80" rx="46" ry="55" fill="#1a0a02"/>
+      <rect x="44" y="90" width="18" height="160" rx="9" fill="#1a0a02"/>
+      <rect x="118" y="90" width="18" height="160" rx="9" fill="#1a0a02"/>
+
+      <!-- Neck -->
+      <rect x="79" y="128" width="22" height="32" rx="8" fill="#f5c5a3"/>
+
+      <!-- Body / top (low-cut green crop top) -->
+      <!-- torso -->
+      <rect x="55" y="155" width="70" height="90" rx="10" fill="#16a34a"/>
+      <!-- deep V neckline cutout -->
+      <polygon points="90,155 70,165 90,195 110,165" fill="#0a0f0a"/>
+      <!-- cleavage -->
+      <!-- left breast -->
+      <ellipse cx="72" cy="180" rx="22" ry="20" fill="#f5c5a3"/>
+      <!-- right breast -->
+      <ellipse cx="108" cy="180" rx="22" ry="20" fill="#f5c5a3"/>
+      <!-- cover lower part of breasts with top fabric -->
+      <rect x="55" y="190" width="70" height="55" rx="0" fill="#16a34a"/>
+      <!-- top hem -->
+      <rect x="55" y="238" width="70" height="8" rx="4" fill="#15803d"/>
+      <!-- cleavage line hint -->
+      <path d="M90 165 Q90 190 90 195" stroke="#e8a87c" stroke-width="1.5" fill="none" opacity="0.6"/>
+
+      <!-- Left arm / hand holding joint -->
+      <rect x="20" y="158" width="18" height="75" rx="9" fill="#f5c5a3" transform="rotate(18,20,158)"/>
+      <!-- hand -->
+      <ellipse cx="28" cy="235" rx="11" ry="9" fill="#f5c5a3" transform="rotate(18,28,235)"/>
+      <!-- JOINT -->
+      <g transform="rotate(-30, 18, 248)">
+        <!-- joint body -->
+        <rect x="4" y="238" width="7" height="38" rx="3.5" fill="#f5e6c8"/>
+        <!-- tip filter -->
+        <rect x="5" y="272" width="5" height="8" rx="2.5" fill="#c8a96e"/>
+        <!-- lit tip -->
+        <ellipse cx="7.5" cy="238" rx="4" ry="3" fill="#ff6b00"/>
+        <ellipse cx="7.5" cy="236" rx="2.5" ry="2" fill="#ffcc00"/>
+        <!-- smoke -->
+        <path d="M7 234 Q4 226 8 218 Q12 210 7 202" stroke="rgba(255,255,255,0.35)" stroke-width="2" fill="none"/>
+        <path d="M8 234 Q12 224 8 216 Q4 208 9 200" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" fill="none"/>
+      </g>
+
+      <!-- Right arm (down/side) -->
+      <rect x="125" y="158" width="18" height="72" rx="9" fill="#f5c5a3" transform="rotate(-12,125,158)"/>
+      <ellipse cx="140" cy="228" rx="10" ry="8" fill="#f5c5a3" transform="rotate(-12,140,228)"/>
+
+      <!-- Shorts / pants (tiny denim shorts) -->
+      <rect x="58" y="240" width="64" height="50" rx="8" fill="#1e40af"/>
+      <line x1="90" y1="240" x2="90" y2="290" stroke="#1e3a8a" stroke-width="2"/>
+      <!-- Legs -->
+      <rect x="60" y="285" width="26" height="80" rx="13" fill="#f5c5a3"/>
+      <rect x="94" y="285" width="26" height="80" rx="13" fill="#f5c5a3"/>
+      <!-- Heels/boots -->
+      <rect x="58" y="358" width="30" height="16" rx="5" fill="#111"/>
+      <rect x="92" y="358" width="30" height="16" rx="5" fill="#111"/>
+
+      <!-- Head -->
+      <ellipse cx="90" cy="78" rx="38" ry="44" fill="#f5c5a3"/>
+
+      <!-- Hair front layer (long dark) -->
+      <path d="M52 65 Q48 20 90 18 Q132 20 128 65" fill="#1a0a02"/>
+      <!-- Hair top/part -->
+      <path d="M60 52 Q90 35 120 52" fill="#2d1005"/>
+
+      <!-- Eyes -->
+      <ellipse cx="75" cy="78" rx="7" ry="8" fill="#fff"/>
+      <ellipse cx="105" cy="78" rx="7" ry="8" fill="#fff"/>
+      <circle cx="76" cy="79" r="4.5" fill="#3d1a00"/>
+      <circle cx="106" cy="79" r="4.5" fill="#3d1a00"/>
+      <circle cx="77.5" cy="77" r="1.5" fill="#fff"/>
+      <circle cx="107.5" cy="77" r="1.5" fill="#fff"/>
+      <!-- Lashes -->
+      <path d="M68 71 Q72 65 78 70" stroke="#111" stroke-width="1.8" fill="none"/>
+      <path d="M112 71 Q108 65 102 70" stroke="#111" stroke-width="1.8" fill="none"/>
+      <!-- Eyebrows -->
+      <path d="M67 67 Q75 62 83 66" stroke="#2d1005" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      <path d="M97 66 Q105 62 113 67" stroke="#2d1005" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+
+      <!-- Nose -->
+      <path d="M88 88 Q90 95 92 88" stroke="#e8a87c" stroke-width="1.5" fill="none"/>
+
+      <!-- Lips (smile) -->
+      <path d="M78 102 Q90 112 102 102" stroke="#e05c78" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <path d="M78 102 Q90 98 102 102" fill="#e05c78" opacity="0.3"/>
+
+      <!-- Earrings -->
+      <circle cx="52" cy="90" r="4" fill="#fbbf24"/>
+      <circle cx="128" cy="90" r="4" fill="#fbbf24"/>
+    </svg>
   </div>
 
-  <!-- PILLS -->
-  <div class="pills">
-    <div class="pill">💰 Finance</div>
-    <div class="pill">📦 Inventory</div>
-    <div class="pill">⚖️ Legal</div>
-    <div class="pill">📱 Socials</div>
-    <div class="pill">🌱 Cultivation</div>
-    <div class="pill">🏪 Dispensary Ops</div>
-    <div class="pill">📊 Compliance</div>
-    <div class="pill">🤝 Customer Support</div>
+  <!-- ===== STEWART SVG ===== -->
+  <div class="stewart-wrap">
+    <svg width="220" height="420" viewBox="0 0 220 420" xmlns="http://www.w3.org/2000/svg">
+      <!-- Body / suit jacket (dark with green cannabis leaf lapel) -->
+      <rect x="45" y="168" width="130" height="200" rx="14" fill="#1c2e1c"/>
+      <!-- lapels -->
+      <polygon points="110,168 70,180 80,240 110,210" fill="#111"/>
+      <polygon points="110,168 150,180 140,240 110,210" fill="#111"/>
+      <!-- shirt/tie -->
+      <rect x="96" y="170" width="28" height="60" rx="4" fill="#e5e7eb"/>
+      <polygon points="110,175 104,195 110,260 116,195" fill="#16a34a"/>
+      <!-- cannabis leaf on lapel -->
+      <g transform="translate(75,195) scale(0.45)">
+        <path d="M20,40 C20,40 0,20 20,0 C20,0 20,20 20,40Z" fill="#22c55e"/>
+        <path d="M20,40 C20,40 40,20 20,0 C20,0 20,20 20,40Z" fill="#22c55e"/>
+        <path d="M20,40 C20,40 -5,35 5,15 C5,15 15,28 20,40Z" fill="#22c55e"/>
+        <path d="M20,40 C20,40 45,35 35,15 C35,15 25,28 20,40Z" fill="#22c55e"/>
+        <path d="M20,40 C20,40 -8,50 2,30 C2,30 12,38 20,40Z" fill="#22c55e"/>
+        <path d="M20,40 C20,40 48,50 38,30 C38,30 28,38 20,40Z" fill="#22c55e"/>
+        <line x1="20" y1="40" x2="20" y2="70" stroke="#22c55e" stroke-width="2"/>
+      </g>
+
+      <!-- Left arm (pointing right → toward CTA) -->
+      <rect x="155" y="170" width="18" height="90" rx="9" fill="#1c2e1c" transform="rotate(-75,155,170)"/>
+      <!-- hand/fist pointing right -->
+      <ellipse cx="210" cy="148" rx="13" ry="11" fill="#c8956c" transform="rotate(-15,210,148)"/>
+      <!-- index finger pointing -->
+      <rect x="218" y="138" width="8" height="22" rx="4" fill="#c8956c" transform="rotate(-15,218,138)"/>
+
+      <!-- Right arm (holding joint/blunt down) -->
+      <rect x="45" y="172" width="18" height="80" rx="9" fill="#1c2e1c" transform="rotate(20,45,172)"/>
+      <!-- hand -->
+      <ellipse cx="30" cy="248" rx="12" ry="10" fill="#c8956c" transform="rotate(20,30,248)"/>
+      <!-- BLUNT in right hand -->
+      <g transform="rotate(25, 24, 262)">
+        <rect x="18" y="252" width="9" height="44" rx="4.5" fill="#8B6914"/>
+        <rect x="19" y="292" width="7" height="10" rx="3" fill="#c8956c"/>
+        <ellipse cx="22.5" cy="252" rx="5" ry="4" fill="#ff5500"/>
+        <ellipse cx="22.5" cy="249" rx="3" ry="2.5" fill="#ffaa00"/>
+        <path d="M22 248 Q18 238 22 228 Q26 218 21 208" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none"/>
+        <path d="M23 248 Q27 236 23 226 Q19 216 24 206" stroke="rgba(255,255,255,0.18)" stroke-width="1.5" fill="none"/>
+      </g>
+
+      <!-- Legs -->
+      <rect x="65" y="355" width="36" height="60" rx="10" fill="#1c2e1c"/>
+      <rect x="119" y="355" width="36" height="60" rx="10" fill="#1c2e1c"/>
+      <!-- Shoes -->
+      <ellipse cx="83" cy="413" rx="24" ry="10" fill="#111"/>
+      <ellipse cx="137" cy="413" rx="24" ry="10" fill="#111"/>
+
+      <!-- Neck -->
+      <rect x="97" y="138" width="26" height="36" rx="10" fill="#c8956c"/>
+
+      <!-- Head -->
+      <ellipse cx="110" cy="105" rx="52" ry="58" fill="#c8956c"/>
+
+      <!-- Hair (close cropped) -->
+      <path d="M58 90 Q60 42 110 38 Q160 42 162 90" fill="#2d1a0a"/>
+      <path d="M60 80 Q65 50 110 46 Q155 50 160 80" fill="#3d2510"/>
+
+      <!-- Beard / stubble -->
+      <ellipse cx="110" cy="148" rx="36" ry="18" fill="#3d2510" opacity="0.4"/>
+
+      <!-- Eyes -->
+      <ellipse cx="92" cy="102" rx="9" ry="10" fill="#fff"/>
+      <ellipse cx="128" cy="102" rx="9" ry="10" fill="#fff"/>
+      <circle cx="93" cy="103" r="5.5" fill="#2d1a0a"/>
+      <circle cx="129" cy="103" r="5.5" fill="#2d1a0a"/>
+      <circle cx="94.5" cy="101" r="2" fill="#fff"/>
+      <circle cx="130.5" cy="101" r="2" fill="#fff"/>
+      <!-- Eyebrows -->
+      <path d="M82 90 Q92 84 102 89" stroke="#2d1a0a" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M118 89 Q128 84 138 90" stroke="#2d1a0a" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+      <!-- Nose -->
+      <path d="M107 116 Q110 126 113 116" stroke="#a0714f" stroke-width="2" fill="none"/>
+      <ellipse cx="104" cy="118" rx="4" ry="3" fill="#b07840" opacity="0.4"/>
+      <ellipse cx="116" cy="118" rx="4" ry="3" fill="#b07840" opacity="0.4"/>
+
+      <!-- Smile -->
+      <path d="M92 135 Q110 150 128 135" stroke="#8b5a2b" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <!-- Teeth -->
+      <path d="M96 136 Q110 146 124 136 Q110 142 96 136Z" fill="#fff" opacity="0.8"/>
+
+      <!-- Ears -->
+      <ellipse cx="58" cy="108" rx="9" ry="12" fill="#c8956c"/>
+      <ellipse cx="162" cy="108" rx="9" ry="12" fill="#c8956c"/>
+    </svg>
   </div>
 
-  <footer>
-    <a href="/events/HOF2026">HOF 2026</a>
-    <a href="/signup.html">Early Access</a>
-    <a href="/nina/">Try Stewart</a>
-    <br><br>
-    © 2026 CanniStew / MeetStewart, Inc. All rights reserved.
-  </footer>
+  <!-- CTA CARD -->
+  <div class="cta-card">
+    <div class="big-msg">Click to Try It Out<br>with Stew 🌿</div>
+    <div class="cta-sub">Have a real conversation with Stewart — cannabis AI that knows your business</div>
+    <a href="/nina/" class="cta-btn">Talk to Stewart →</a>
+  </div>
+
+</div>
+
+<!-- BOTTOM BAND -->
+<div class="bottom-band">
+  <div class="big-central">
+    <span>Cannabis Industry</span> Focused AI<br>
+    <span>Voice · Text · Chat</span> Any Time<br>
+    Powered by <span>Stewart AI</span>
+  </div>
+  <div class="powered">CanniStew.com — Built for the plant 🌱</div>
+</div>
+
+<!-- PILLS -->
+<div class="pills">
+  <span class="pill">Finance</span>
+  <span class="pill">Inventory</span>
+  <span class="pill">Legal</span>
+  <span class="pill">Socials</span>
+  <span class="pill">Cultivation</span>
+  <span class="pill">Dispensary Ops</span>
+  <span class="pill">Compliance</span>
+  <span class="pill">Customer Support</span>
+  <span class="pill">Lab Results</span>
+  <span class="pill">Licensing</span>
+</div>
 
 </body>
 </html>
