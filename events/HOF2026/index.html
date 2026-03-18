@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CanniStew @ Hall of Flowers 2026</title>
-  <meta name="description" content="You found us at Hall of Flowers 2026. Claim your early access to CanniStew — AI built for cannabis operators." />
+  <meta name="description" content="Thank you for visiting us at the 2026 Hall of Flowers. Stay connected with CanniStew — AI built for cannabis operators." />
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -36,72 +36,32 @@
       color: #555;
       letter-spacing: 2px;
       text-transform: uppercase;
-      margin-bottom: 48px;
+      margin-bottom: 36px;
     }
-    .hero-block {
+    .thank-you {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    .thank-you h1 {
+      font-size: clamp(1.6rem, 6vw, 2.2rem);
+      font-weight: 800;
+      line-height: 1.25;
+      letter-spacing: -0.5px;
+      margin-bottom: 12px;
+    }
+    .thank-you h1 span { color: #22c55e; }
+    .thank-you p {
+      font-size: 0.95rem;
+      color: #777;
+      line-height: 1.65;
+    }
+
+    /* Form */
+    .form-block {
       background: #0d1a0f;
       border: 1px solid #1a3a1f;
       border-radius: 16px;
-      padding: 36px 28px;
-      text-align: center;
-      margin-bottom: 24px;
-    }
-    .eyebrow {
-      display: inline-block;
-      background: rgba(34,197,94,0.12);
-      border: 1px solid rgba(34,197,94,0.3);
-      color: #22c55e;
-      padding: 5px 14px;
-      border-radius: 100px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      margin-bottom: 20px;
-    }
-    h1 {
-      font-size: clamp(1.8rem, 7vw, 2.6rem);
-      font-weight: 800;
-      line-height: 1.2;
-      letter-spacing: -0.5px;
-      margin-bottom: 20px;
-    }
-    h1 span { color: #22c55e; }
-    .hero-desc {
-      font-size: 0.95rem;
-      color: #888;
-      line-height: 1.65;
-      margin-bottom: 32px;
-    }
-    .hero-desc strong { color: #ddd; }
-    .btn-cta {
-      display: block;
-      background: #22c55e;
-      color: #000;
-      padding: 18px;
-      border-radius: 10px;
-      font-weight: 800;
-      font-size: 1rem;
-      text-decoration: none;
-      text-align: center;
-      transition: background 0.2s, transform 0.1s;
-      letter-spacing: 0.2px;
-    }
-    .btn-cta:hover { background: #16a34a; transform: translateY(-1px); }
-    .btn-cta:active { transform: translateY(0); }
-    .sub-cta {
-      font-size: 0.75rem;
-      color: #444;
-      text-align: center;
-      margin-top: 12px;
-    }
-
-    /* Lead Capture Form */
-    .form-block {
-      background: #0f0f0f;
-      border: 1px solid #222;
-      border-radius: 16px;
-      padding: 28px;
+      padding: 32px 28px;
       margin-bottom: 24px;
     }
     .form-block h2 {
@@ -137,31 +97,23 @@
       line-height: 1.5;
       margin-top: 4px;
     }
+    .consent-text a { color: #555; }
     .btn-submit {
       width: 100%;
       background: #22c55e;
       color: #000;
-      padding: 15px;
+      padding: 16px;
       border-radius: 8px;
       font-weight: 800;
-      font-size: 0.95rem;
+      font-size: 1rem;
       border: none;
       cursor: pointer;
-      margin-top: 4px;
-      transition: background 0.2s;
+      margin-top: 8px;
+      transition: background 0.2s, transform 0.1s;
+      letter-spacing: 0.2px;
     }
-    .btn-submit:hover { background: #16a34a; }
-    .success-msg {
-      display: none;
-      text-align: center;
-      padding: 20px;
-      background: rgba(34,197,94,0.08);
-      border: 1px solid rgba(34,197,94,0.25);
-      border-radius: 10px;
-      color: #22c55e;
-      font-weight: 600;
-      font-size: 0.95rem;
-    }
+    .btn-submit:hover { background: #16a34a; transform: translateY(-1px); }
+    .btn-submit:active { transform: translateY(0); }
 
     /* How it works */
     .steps-block {
@@ -171,7 +123,7 @@
       padding: 28px;
       margin-bottom: 24px;
     }
-    .steps-block h2 { font-size: 0.95rem; color: #666; font-weight: 600; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
+    .steps-block h2 { font-size: 0.85rem; color: #555; font-weight: 600; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
     .step { display: flex; gap: 16px; margin-bottom: 20px; align-items: flex-start; }
     .step:last-child { margin-bottom: 0; }
     .step-num {
@@ -205,42 +157,36 @@
     <div class="logo">🌿 CanniStew</div>
     <div class="event-tag">Hall of Flowers 2026</div>
 
-    <!-- Hero -->
-    <div class="hero-block">
-      <div class="eyebrow">🔒 Private Beta</div>
-      <h1>AI built for<br><span>cannabis</span></h1>
-      <p class="hero-desc">
-        Stewart is your always-on AI operator for cannabis businesses.
-        <br><br>
-        Early partners who join now lock in <strong>special lifetime pricing</strong> — for as long as they use the platform.
-        <br><br>
-        This offer is only available during the show.
-      </p>
-      <a href="https://meetstewart.com/signup.html" class="btn-cta">Claim Beta Access</a>
-      <p class="sub-cta">No credit card required · Takes 2 minutes</p>
+    <!-- Thank You -->
+    <div class="thank-you">
+      <h1>Thank you for visiting us at the<br><span>2026 Hall of Flowers</span></h1>
+      <p>Drop your info below and we'll be in touch with early access details and exclusive pricing.</p>
     </div>
 
-    <!-- Lead Capture -->
+    <!-- Lead Capture Form -->
     <div class="form-block">
-      <h2>Stay in the loop</h2>
-      <p>Drop your info and we'll follow up with early access details.</p>
-      <form id="leadForm">
+      <h2>Stay connected</h2>
+      <p>We'll follow up with everything you need to get started.</p>
+      <form action="https://formsubmit.co/nickmc123@gmail.com" method="POST">
+        <!-- Formsubmit config -->
+        <input type="hidden" name="_subject" value="HOF2026 Lead" />
+        <input type="hidden" name="_next" value="https://cannistew.com/events/HOF2026/thanks.html" />
+        <input type="hidden" name="_captcha" value="false" />
+        <input type="hidden" name="source" value="HOF2026" />
+
         <div class="form-row">
           <input type="text" name="name" placeholder="Your name" required />
           <input type="text" name="company" placeholder="Dispensary / company name" />
           <input type="tel" name="phone" placeholder="Phone number" />
-          <input type="email" name="email" placeholder="Email address" />
+          <input type="email" name="email" placeholder="Email address" required />
         </div>
         <p class="consent-text" style="margin-top: 12px;">
           By submitting, you agree to receive messages about CanniStew from MeetStewart, Inc.
-          Message frequency varies. Reply STOP to opt out. Msg &amp; data rates may apply.
-          See <a href="/privacy.html" style="color:#555;">Privacy Policy</a> and <a href="/terms.html" style="color:#555;">Terms</a>.
+          Reply STOP to opt out. Msg &amp; data rates may apply.
+          See <a href="/privacy.html">Privacy Policy</a> and <a href="/terms.html">Terms</a>.
         </p>
-        <button type="submit" class="btn-submit">Send me info</button>
+        <button type="submit" class="btn-submit">Send me info →</button>
       </form>
-      <div class="success-msg" id="successMsg">
-        ✅ Got it! We'll reach out soon.
-      </div>
     </div>
 
     <!-- How it works -->
@@ -249,8 +195,8 @@
       <div class="step">
         <div class="step-num">1</div>
         <div class="step-text">
-          <h3>Sign up</h3>
-          <p>Create your free beta account in 2 minutes.</p>
+          <h3>We reach out</h3>
+          <p>Expect a message from our team within 24 hours of the show.</p>
         </div>
       </div>
       <div class="step">
@@ -282,17 +228,6 @@
       We do not sell or share mobile or personal data with third parties for marketing or promotional purposes.
     </div>
   </footer>
-
-  <script>
-    document.getElementById('leadForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const form = e.target;
-      const data = new FormData(form);
-      // TODO: wire to form endpoint (Formspree or Google Sheet)
-      form.style.display = 'none';
-      document.getElementById('successMsg').style.display = 'block';
-    });
-  </script>
 
 </body>
 </html>
