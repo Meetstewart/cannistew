@@ -448,7 +448,10 @@
   'use strict';
 
   // ── Personas ──────────────────────────────────────────────────────────────
-  const ELEVENLABS_API_KEY = 'sk_69ca5f0d54a48ca9353f954bd648d474b4ed7238de9ef7bf';
+  // SECURITY: API key must not be in client-side code. Use a backend proxy.
+  // TODO: Implement a backend endpoint to proxy ElevenLabs API calls,
+  // and remove this key entirely from client-side code.
+  const ELEVENLABS_API_KEY = ''; // REMOVED — credential must not be exposed in client-side code
 
   const PERSONAS = {
     cannistew: {

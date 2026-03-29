@@ -8,8 +8,10 @@ const fs = require('fs');
 const path = require('path');
 
 const PORT = process.env.PORT || 4100;
-const ELEVENLABS_API_KEY = 'sk_69ca5f0d54a48ca9353f954bd648d474b4ed7238de9ef7bf';
-const VOICE_ID = 'iP95p4xoKVk53GoZ742B'; // Chris
+// SECURITY: Load from environment variable
+const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY;
+// SECURITY: Load from environment variable
+const VOICE_ID = process.env.ELEVENLABS_VOICE_ID;
 
 // Simple canned responses for demo
 const GREETINGS = [

@@ -1,6 +1,10 @@
 #!/bin/bash
 # Nina LaunchAgent Setup - v26.16.0
 set -e
+
+# SECURITY: These environment variables must be set before running this script:
+#   OPENROUTER_API_KEY - Your OpenRouter API key
+#   ELEVENLABS_API_KEY - Your ElevenLabs API key
 NODE_BIN="/Users/apple/.nvm/versions/node/v26.16.0/bin/node"
 NINA_DIR="/Users/apple/stewart-core/services/nina-demo"
 LAUNCH_AGENTS="$HOME/Library/LaunchAgents"
@@ -46,8 +50,8 @@ cat > "$LAUNCH_AGENTS/com.nina.server.plist" << PLIST
   <key>WorkingDirectory</key><string>$NINA_DIR</string>
   <key>EnvironmentVariables</key>
   <dict>
-    <key>OPENROUTER_API_KEY</key><string>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</string>
-    <key>ELEVENLABS_API_KEY</key><string>sk_69ca5f0d54a48ca9353f954bd648d474b4ed7238de9ef7bf</string>
+    <key>OPENROUTER_API_KEY</key><string>${OPENROUTER_API_KEY}</string>
+    <key>ELEVENLABS_API_KEY</key><string>${ELEVENLABS_API_KEY}</string>
     <key>PORT</key><string>4100</string>
   </dict>
   <key>RunAtLoad</key><true/>
