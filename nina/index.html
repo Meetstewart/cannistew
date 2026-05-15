@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CanniStew — Talk to Stewart & Nina</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --accent: #22c55e;
+      --accent-dim: #16a34a;
+      --accent-glow: rgba(34, 197, 94, 0.4);
+      --bg: #030803;
+      --surface: #0a140a;
+      --border: rgba(34, 197, 94, 0.15);
+      --text: #e8f5e8;
+      --text-dim: #5a7a5a;
+      --monitor-bezel: #111;
+      --monitor-inner: #0a0a0a;
+      --scanline: rgba(0, 255, 0, 0.03);
+    }
+
+    html, body {
+      width: 100%; height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      overflow: hidden;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    #app {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      position: relative;
+      padding: 20px;
+    }
+
+    /* ── Persona toggle ────────────────────────────── */
+    #persona-bar {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      overflow: hidden;
+      z-index: 10;
+    }
+    .persona-btn {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 10px 22px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 0.02em;
+    }
+    .persona-btn.active {
+      background: var(--accent);
+      color: #000;
+      border-radius: 50px;
+    }
+
+    /* ── Monitor frame ─────────────────────────────── */
+    #monitor {
+      position: relative;
+      width: 380px;
+      height: 420px;
+      background: var(--monitor-bezel);
+      border-radius: 24px;
+      padding: 12px;
+      box-shadow:
+        0 0 60px rgba(34, 197, 94, 0.08),
+        0 20px 60px rgba(0,0,0,0.6),
+        inset 0 1px 0 rgba(255,255,255,0.05);
+      transition: box-shadow 0.5s ease;
+    }
+    #monitor.active {
+      box-shadow:
+        0 0 80px var(--accent-glow),
+        0 20px 60px rgba(0,0,0,0.6),
+        inset 0 1px 0 rgba(255,255,255,0.05);
+    }
+
+    /* Monitor power LED */
+    #power-led {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #333;
+      transition: all 0.5s ease;
+    }
+    #power-led.on {
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+    }
+    #power-led.listening {
+      background: #3b82f6;
+      box-shadow: 0 0 8px #3b82f6;
+      animation: led-pulse 1s ease infinite;
+    }
+    #power-led.speaking {
+      background: var(--accent);
+      box-shadow: 0 0 12px var(--accent);
+      animation: led-pulse 0.5s ease infinite;
+    }
+    @keyframes led-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* Screen area */
+    #screen {
+      width: 100%;
+      height: 100%;
+      background: var(--monitor-inner);
+      border-radius: 14px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Scanlines overlay */
+    #screen::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        var(--scanline) 2px,
+        var(--scanline) 4px
+      );
+      pointer-events: none;
+      z-index: 3;
+      opacity: 0.5;
+    }
+
+    /* Screen reflection */
+    #screen::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.03) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 4;
+    }
+
+    /* Canvas for avatar animation */
+    #avatar-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Screen glow overlay */
+    #screen-glow {
+      position: absolute;
+      inset: 0;
+      border-radius: 14px;
+      pointer-events: none;
+      z-index: 2;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      background: radial-gradient(ellipse at center 60%, var(--accent-glow) 0%, transparent 70%);
+    }
+    #screen-glow.active {
+      opacity: 0.3;
+    }
+    #screen-glow.speaking {
+      opacity: 0.5;
+      animation: glow-breathe 0.8s ease infinite;
+    }
+    @keyframes glow-breathe {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.6; }
+    }
+
+    /* ── Status bar ────────────────────────────────── */
+    #status-bar {
+      margin-top: 20px;
+      text-align: center;
+    }
+    #status-label {
+      font-size: 13px;
+      color: var(--text-dim);
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: color 0.3s;
+    }
+    #status-label.listening { color: #3b82f6; }
+    #status-label.speaking { color: var(--accent); }
+    #status-label.thinking { color: #f59e0b; }
+
+    /* ── Talk button ───────────────────────────────── */
+    #btn-voice {
+      margin-top: 16px;
+      padding: 14px 36px;
+      font-size: 16px;
+      font-weight: 700;
+      color: #000;
+      background: var(--accent);
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      letter-spacing: 0.02em;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(34, 197, 94, 0.3);
+    }
+    #btn-voice:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 30px rgba(34, 197, 94, 0.4);
+    }
+    #btn-voice:active {
+      transform: translateY(0);
+    }
+    #btn-voice.active {
+      background: #ef4444;
+      box-shadow: 0 4px 20px rgba(239, 68, 68, 0.3);
+    }
+
+    /* ── Transcript ────────────────────────────────── */
+    #transcript {
+      margin-top: 14px;
+      max-width: 380px;
+      max-height: 60px;
+      overflow-y: auto;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-dim);
+      line-height: 1.4;
+    }
+
+    /* ── Branding ──────────────────────────────────── */
+    #branding {
+      position: absolute;
+      bottom: 16px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.15);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* ── Toast ──────────────────────────────────────── */
+    #toast {
+      position: fixed;
+      top: 70px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-20px);
+      background: var(--surface);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+      z-index: 100;
+    }
+    #toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ── Audio visualizer bars ─────────────────────── */
+    #audio-viz {
+      display: flex;
+      gap: 3px;
+      align-items: center;
+      justify-content: center;
+      height: 20px;
+      margin-top: 8px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    #audio-viz.active { opacity: 1; }
+    .viz-bar {
+      width: 3px;
+      height: 4px;
+      background: var(--accent);
+      border-radius: 2px;
+      transition: height 0.1s ease;
+    }
+
+    /* ── Mobile ─────────────────────────────────────── */
+    @media (max-width: 480px) {
+      #monitor { width: 320px; height: 360px; }
+      #btn-voice { padding: 12px 28px; font-size: 15px; }
+    }
+    @media (max-width: 360px) {
+      #monitor { width: 280px; height: 320px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div id="persona-bar">
+      <button class="persona-btn active" onclick="switchPersona('stewart')">🌿 Stewart</button>
+      <button class="persona-btn" onclick="switchPersona('nina')">💜 Nina</button>
+    </div>
+
+    <div id="monitor">
+      <div id="screen">
+        <canvas id="avatar-canvas"></canvas>
+        <div id="screen-glow"></div>
+      </div>
+      <div id="power-led"></div>
+    </div>
+
+    <div id="status-bar">
+      <div id="status-label">TAP TO TALK</div>
+      <div id="audio-viz">
+        <div class="viz-bar"></div><div class="viz-bar"></div><div class="viz-bar"></div>
+        <div class="viz-bar"></div><div class="viz-bar"></div><div class="viz-bar"></div>
+        <div class="viz-bar"></div><div class="viz-bar"></div><div class="viz-bar"></div>
+        <div class="viz-bar"></div><div class="viz-bar"></div><div class="viz-bar"></div>
+      </div>
+    </div>
+
+    <button id="btn-voice" onclick="toggleVoice()">🎤 Start Conversation</button>
+
+    <div id="transcript"></div>
+
+    <div id="branding">Powered by Stewart AI</div>
+    <div id="toast"></div>
+  </div>
+
+  <script type="module">
+    // ── Config ────────────────────────────────────────────
+    const PERSONAS = {
+      stewart: {
+        name: 'Stewart',
+        agentId: 'agent_2001krn75ntcet3b2wte9nddrq7e',
+        avatar: '../assets/stewart-hero.png',
+        accent: '#22c55e',
+        accentGlow: 'rgba(34, 197, 94, 0.4)',
+        scanline: 'rgba(0, 255, 0, 0.03)',
+        ledColor: '#22c55e',
+      },
+      nina: {
+        name: 'Nina',
+        agentId: 'agent_2001krn75ntcet3b2wte9nddrq7e',
+        avatar: '../assets/nina-hero.png',
+        accent: '#a855f7',
+        accentGlow: 'rgba(168, 85, 247, 0.4)',
+        scanline: 'rgba(168, 85, 247, 0.03)',
+        ledColor: '#a855f7',
+      }
+    };
+
+    let currentPersona = 'stewart';
+    let conversation = null;
+    let isActive = false;
+    let animState = 'idle'; // idle | listening | speaking | thinking
+
+    // ── DOM refs ──────────────────────────────────────────
+    const canvas = document.getElementById('avatar-canvas');
+    const ctx = canvas.getContext('2d');
+    const monitor = document.getElementById('monitor');
+    const screen_ = document.getElementById('screen');
+    const screenGlow = document.getElementById('screen-glow');
+    const powerLed = document.getElementById('power-led');
+    const statusLabel = document.getElementById('status-label');
+    const btnVoice = document.getElementById('btn-voice');
+    const transcript = document.getElementById('transcript');
+    const audioViz = document.getElementById('audio-viz');
+    const vizBars = audioViz.querySelectorAll('.viz-bar');
+    const toast = document.getElementById('toast');
+
+    // ── Avatar images ────────────────────────────────────
+    const avatarImages = {};
+    let currentImg = null;
+    let nextImg = null;
+    let crossfade = 1; // 0 = showing nextImg, 1 = showing currentImg
+
+    function loadAvatars() {
+      for (const [key, p] of Object.entries(PERSONAS)) {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.src = p.avatar;
+        avatarImages[key] = img;
+      }
+      currentImg = avatarImages[currentPersona];
+    }
+    loadAvatars();
+
+    // ── Canvas sizing ────────────────────────────────────
+    function resizeCanvas() {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      canvas.width = rect.width * window.devicePixelRatio;
+      canvas.height = rect.height * window.devicePixelRatio;
+      canvas.style.width = rect.width + 'px';
+      canvas.style.height = rect.height + 'px';
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // ── Animation state ──────────────────────────────────
+    let time = 0;
+    let blinkTimer = 0;
+    let blinkState = 0; // 0 = open, 1 = closing, 2 = closed, 3 = opening
+    let blinkProgress = 0;
+    let nextBlink = 2000 + Math.random() * 4000;
+    let mouthOpen = 0;
+    let targetMouth = 0;
+    let breathe = 0;
+    let headTilt = 0;
+    let targetHeadTilt = 0;
+    let floatY = 0;
+    let speakIntensity = 0;
+    let particles = [];
+
+    // Create particles
+    for (let i = 0; i < 30; i++) {
+      particles.push({
+        x: Math.random(),
+        y: Math.random(),
+        size: 1 + Math.random() * 2,
+        speed: 0.0002 + Math.random() * 0.0005,
+        opacity: 0.1 + Math.random() * 0.3,
+        phase: Math.random() * Math.PI * 2,
+      });
+    }
+
+    // ── Main render loop ─────────────────────────────────
+    let lastTime = 0;
+    function render(timestamp) {
+      const dt = timestamp - lastTime;
+      lastTime = timestamp;
+      time += dt;
+
+      resizeCanvas();
+      const w = canvas.width;
+      const h = canvas.height;
+      const persona = PERSONAS[currentPersona];
+
+      ctx.clearRect(0, 0, w, h);
+
+      // Background gradient
+      const bgGrad = ctx.createRadialGradient(w/2, h*0.55, 0, w/2, h*0.55, w*0.7);
+      bgGrad.addColorStop(0, 'rgba(34, 197, 94, 0.04)');
+      bgGrad.addColorStop(1, 'transparent');
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, w, h);
+
+      // ── Update animations ──────────────────────────────
+      // Breathing
+      breathe = Math.sin(time * 0.002) * 0.008;
+
+      // Float
+      floatY = Math.sin(time * 0.0015) * 4;
+
+      // Head tilt
+      if (animState === 'listening') {
+        targetHeadTilt = Math.sin(time * 0.001) * 0.015;
+      } else if (animState === 'speaking') {
+        targetHeadTilt = Math.sin(time * 0.003) * 0.02;
+      } else {
+        targetHeadTilt = Math.sin(time * 0.0008) * 0.005;
+      }
+      headTilt += (targetHeadTilt - headTilt) * 0.05;
+
+      // Blinking
+      blinkTimer += dt;
+      if (blinkState === 0 && blinkTimer > nextBlink) {
+        blinkState = 1;
+        blinkTimer = 0;
+        // Sometimes double-blink
+        nextBlink = Math.random() < 0.3 ? 200 : (2000 + Math.random() * 5000);
+      }
+      if (blinkState === 1) {
+        blinkProgress = Math.min(1, blinkProgress + dt * 0.008);
+        if (blinkProgress >= 1) { blinkState = 2; blinkTimer = 0; }
+      } else if (blinkState === 2) {
+        blinkTimer += 0;
+        if (blinkTimer > 50) { blinkState = 3; }
+      } else if (blinkState === 3) {
+        blinkProgress = Math.max(0, blinkProgress - dt * 0.006);
+        if (blinkProgress <= 0) { blinkState = 0; blinkTimer = 0; }
+      }
+
+      // Mouth
+      if (animState === 'speaking') {
+        if (Math.random() < 0.15) {
+          targetMouth = 0.3 + Math.random() * 0.7;
+        }
+        speakIntensity += (1 - speakIntensity) * 0.1;
+      } else {
+        targetMouth = 0;
+        speakIntensity *= 0.95;
+      }
+      mouthOpen += (targetMouth - mouthOpen) * 0.15;
+
+      // ── Draw particles ─────────────────────────────────
+      const accentColor = persona.accent;
+      particles.forEach(p => {
+        p.y -= p.speed * dt;
+        if (p.y < -0.05) { p.y = 1.05; p.x = Math.random(); }
+        const px = p.x * w + Math.sin(time * 0.001 + p.phase) * 20;
+        const py = p.y * h;
+        const alpha = p.opacity * (animState === 'speaking' ? 0.6 : animState === 'listening' ? 0.4 : 0.2);
+        ctx.beginPath();
+        ctx.arc(px, py, p.size * window.devicePixelRatio, 0, Math.PI * 2);
+        ctx.fillStyle = accentColor + Math.round(alpha * 255).toString(16).padStart(2, '0');
+        ctx.fill();
+      });
+
+      // ── Draw avatar ────────────────────────────────────
+      if (currentImg && currentImg.complete && currentImg.naturalWidth > 0) {
+        ctx.save();
+
+        // Avatar positioning — centered, fills most of screen
+        const imgAspect = currentImg.naturalWidth / currentImg.naturalHeight;
+        let drawW, drawH;
+        const screenAspect = w / h;
+
+        if (imgAspect > screenAspect) {
+          drawW = w * 0.85;
+          drawH = drawW / imgAspect;
+        } else {
+          drawH = h * 0.85;
+          drawW = drawH * imgAspect;
+        }
+
+        const cx = w / 2;
+        const cy = h / 2 + floatY * window.devicePixelRatio;
+
+        // Apply transforms
+        ctx.translate(cx, cy);
+        ctx.rotate(headTilt);
+        ctx.scale(1 + breathe, 1 + breathe);
+
+        // Speaking bounce
+        if (speakIntensity > 0.01) {
+          const bounce = Math.sin(time * 0.006) * 0.01 * speakIntensity;
+          ctx.scale(1, 1 + bounce);
+        }
+
+        // Draw main avatar with crossfade support
+        if (crossfade < 1 && nextImg && nextImg.complete) {
+          // Draw old image fading out
+          ctx.globalAlpha = crossfade;
+          ctx.drawImage(currentImg, -drawW/2, -drawH/2, drawW, drawH);
+          // Draw new image fading in
+          ctx.globalAlpha = 1 - crossfade;
+          const nAspect = nextImg.naturalWidth / nextImg.naturalHeight;
+          let nW, nH;
+          if (nAspect > screenAspect) { nW = w * 0.85; nH = nW / nAspect; }
+          else { nH = h * 0.85; nW = nH * nAspect; }
+          ctx.drawImage(nextImg, -nW/2, -nH/2, nW, nH);
+          ctx.globalAlpha = 1;
+          crossfade -= 0.02;
+          if (crossfade <= 0) {
+            currentImg = nextImg;
+            nextImg = null;
+            crossfade = 1;
+          }
+        } else {
+          ctx.drawImage(currentImg, -drawW/2, -drawH/2, drawW, drawH);
+        }
+
+        // ── Blink overlay ─────────────────────────────
+        if (blinkProgress > 0) {
+          // Draw eyelid-like overlay on the eye region
+          const eyeY = -drawH * 0.12;
+          const eyeH = drawH * 0.06 * blinkProgress;
+          ctx.fillStyle = '#1a1a1a';
+          // Left eye area
+          ctx.beginPath();
+          ctx.ellipse(-drawW * 0.11, eyeY, drawW * 0.06, eyeH, 0, 0, Math.PI * 2);
+          ctx.fill();
+          // Right eye area
+          ctx.beginPath();
+          ctx.ellipse(drawW * 0.11, eyeY, drawW * 0.06, eyeH, 0, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // ── Mouth animation overlay ───────────────────
+        if (mouthOpen > 0.05) {
+          const mouthY = drawH * 0.1;
+          const mouthW = drawW * 0.08;
+          const mouthH = drawH * 0.03 * mouthOpen;
+          ctx.fillStyle = '#1a0a0a';
+          ctx.beginPath();
+          ctx.ellipse(0, mouthY, mouthW, mouthH, 0, 0, Math.PI * 2);
+          ctx.fill();
+          // Slight inner color
+          ctx.fillStyle = '#2a0808';
+          ctx.beginPath();
+          ctx.ellipse(0, mouthY, mouthW * 0.7, mouthH * 0.6, 0, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        ctx.restore();
+      }
+
+      // ── Accent glow at bottom ──────────────────────────
+      if (animState === 'speaking' || animState === 'listening') {
+        const glowGrad = ctx.createRadialGradient(w/2, h, 0, w/2, h, w * 0.5);
+        const alpha = animState === 'speaking' ? 0.12 + Math.sin(time * 0.004) * 0.05 : 0.06;
+        glowGrad.addColorStop(0, accentColor + Math.round(alpha * 255).toString(16).padStart(2, '0'));
+        glowGrad.addColorStop(1, 'transparent');
+        ctx.fillStyle = glowGrad;
+        ctx.fillRect(0, 0, w, h);
+      }
+
+      // ── Audio wave ring when speaking ──────────────────
+      if (speakIntensity > 0.05) {
+        const ringAlpha = speakIntensity * 0.15;
+        const ringRadius = w * 0.35 + Math.sin(time * 0.003) * 20;
+        ctx.strokeStyle = accentColor + Math.round(ringAlpha * 255).toString(16).padStart(2, '0');
+        ctx.lineWidth = 2 * window.devicePixelRatio;
+        ctx.beginPath();
+        for (let a = 0; a < Math.PI * 2; a += 0.05) {
+          const wave = Math.sin(a * 6 + time * 0.005) * 8 * speakIntensity;
+          const r = ringRadius + wave;
+          const x = w/2 + Math.cos(a) * r;
+          const y = h/2 + Math.sin(a) * r + floatY;
+          if (a === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        ctx.stroke();
+      }
+
+      requestAnimationFrame(render);
+    }
+    requestAnimationFrame(render);
+
+    // ── Audio visualizer update ───────────────────────────
+    let vizInterval;
+    function startViz() {
+      audioViz.classList.add('active');
+      vizInterval = setInterval(() => {
+        vizBars.forEach(bar => {
+          const h = animState === 'speaking'
+            ? 4 + Math.random() * 16
+            : animState === 'listening'
+            ? 4 + Math.random() * 8
+            : 4;
+          bar.style.height = h + 'px';
+        });
+      }, 100);
+    }
+    function stopViz() {
+      audioViz.classList.remove('active');
+      clearInterval(vizInterval);
+      vizBars.forEach(bar => bar.style.height = '4px');
+    }
+
+    // ── UI state ─────────────────────────────────────────
+    function setAnimState(state) {
+      animState = state;
+      powerLed.className = state === 'idle' ? (isActive ? 'on' : '') : state;
+      statusLabel.className = state;
+      screenGlow.className = state === 'speaking' ? 'speaking' : (state !== 'idle' ? 'active' : '');
+      monitor.className = state !== 'idle' ? 'active' : '';
+
+      if (state === 'idle' && !isActive) {
+        statusLabel.textContent = 'TAP TO TALK';
+      } else if (state === 'idle') {
+        statusLabel.textContent = 'CONNECTED';
+      } else if (state === 'listening') {
+        statusLabel.textContent = 'LISTENING...';
+      } else if (state === 'speaking') {
+        statusLabel.textContent = 'SPEAKING...';
+      } else if (state === 'thinking') {
+        statusLabel.textContent = 'THINKING...';
+      }
+    }
+
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+
+    // ── Persona switch ───────────────────────────────────
+    window.switchPersona = function(name) {
+      if (name === currentPersona) return;
+      currentPersona = name;
+      const persona = PERSONAS[name];
+
+      // Update CSS vars
+      document.documentElement.style.setProperty('--accent', persona.accent);
+      document.documentElement.style.setProperty('--accent-glow', persona.accentGlow);
+      document.documentElement.style.setProperty('--scanline', persona.scanline);
+
+      // Crossfade avatar
+      nextImg = avatarImages[name];
+      crossfade = 1;
+
+      // Toggle buttons
+      document.querySelectorAll('.persona-btn').forEach(b => {
+        b.classList.toggle('active', b.textContent.includes(persona.name));
+      });
+
+      showToast(`Switched to ${persona.name}`);
+    };
+
+    // ── ElevenLabs Conversational AI ─────────────────────
+    async function startConversation() {
+      const persona = PERSONAS[currentPersona];
+
+      try {
+        const { Conversation } = await import('https://cdn.jsdelivr.net/npm/@11labs/client@0.2.2/+esm');
+
+        // Request microphone
+        await navigator.mediaDevices.getUserMedia({ audio: true });
+
+        conversation = await Conversation.startSession({
+          agentId: persona.agentId,
+          onConnect: () => {
+            console.log('[stewdev] Connected to Stewart Dev');
+            isActive = true;
+            setAnimState('idle');
+            powerLed.classList.add('on');
+            statusLabel.textContent = 'CONNECTED';
+            startViz();
+          },
+          onDisconnect: () => {
+            console.log('[stewdev] Disconnected');
+            isActive = false;
+            setAnimState('idle');
+            stopViz();
+          },
+          onModeChange: ({ mode }) => {
+            console.log('[stewdev] Mode:', mode);
+            if (mode === 'listening') {
+              setAnimState('listening');
+            } else if (mode === 'speaking') {
+              setAnimState('speaking');
+            } else {
+              setAnimState('thinking');
+            }
+          },
+          onMessage: (msg) => {
+            console.log('[stewdev] Message:', msg);
+            if (msg.message) {
+              transcript.textContent = msg.message;
+            }
+          },
+          onError: (error) => {
+            console.error('[stewdev] Error:', error);
+            showToast('Connection error — retrying...');
+          }
+        });
+
+        return true;
+      } catch (err) {
+        console.error('[stewdev] Failed to start:', err);
+        showToast('Could not connect to Stewart Dev');
+        return false;
+      }
+    }
+
+    async function stopConversation() {
+      if (conversation) {
+        try {
+          await conversation.endSession();
+        } catch (e) {
+          console.warn('[stewdev] End session error:', e);
+        }
+        conversation = null;
+      }
+      isActive = false;
+      setAnimState('idle');
+      stopViz();
+    }
+
+    // ── Toggle voice ─────────────────────────────────────
+    window.toggleVoice = async function() {
+      if (isActive) {
+        await stopConversation();
+        btnVoice.innerHTML = '🎤 Start Conversation';
+        btnVoice.classList.remove('active');
+      } else {
+        btnVoice.innerHTML = '⏳ Connecting...';
+        btnVoice.disabled = true;
+        setAnimState('thinking');
+
+        const ok = await startConversation();
+
+        btnVoice.disabled = false;
+        if (ok) {
+          btnVoice.innerHTML = '⏹ End Conversation';
+          btnVoice.classList.add('active');
+        } else {
+          btnVoice.innerHTML = '🎤 Start Conversation';
+          setAnimState('idle');
+        }
+      }
+    };
+
+    // ── Boot sequence ────────────────────────────────────
+    setTimeout(() => {
+      powerLed.style.background = '#333';
+      powerLed.style.boxShadow = '0 0 4px rgba(255,255,255,0.1)';
+    }, 500);
+  </script>
+</body>
+</html>
